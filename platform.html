@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>send present platform</title>
+</head>
+<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+<script language="javascript">
+send();
+function send() {
+    $.ajax({
+        url: 'sendPresent.php',
+        dataType: 'html',
+        type: 'POST',
+        error: function(response) { //the call back function when ajax call fails
+            alert('Ajax request failed!');
+        },
+        success: function(json) { //the call back function when ajax call succeed
+            console.log(json);
+        }
+    });
+}
+window.onload = function () {
+    //每5分鐘新增禮包  1000*60*5
+    setInterval(function () {
+        send();
+    }, 300000);
+};
+
+</script>
+
+<body>
+    <div id="main">
+        <h1>This is the main page.</h1>
+    </div>
+    <div id="banner">
+        <center>
+            <h1>歡迎來到。競標網站</h1></center>
+    </div>
+    <div id="vmenu">
+        <ul>
+            <li><a href="#member">我的卡片</a></li>
+            <li><a href="#ppt">我要換錢</a></li>
+            <li><a href="#case">競標紀錄</a></li>
+        </ul>
+    </div>
+    <fieldset id="content">
+        <legend>競標平台</legend>
+        <table border=3 cellpadding="5" id="board">
+        </table>
+    </fieldset>
+</body>
+
+</html>
