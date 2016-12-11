@@ -9,7 +9,7 @@
     session_start();
     require("./php/dbconnect.php");
     $uid = mysqli_real_escape_string($conn,$_SESSION['uid']);
-    $sql = "select card.name,inventory.num from inventory,card where uid=1 and inventory.cid=card.cid";
+    $sql = "select card.name,inventory.num from inventory,card where uid=$uid and inventory.cid=card.cid";
     $result = mysqli_query($conn,$sql) or die("db error");  
 ?>
 <style type="text/css">
