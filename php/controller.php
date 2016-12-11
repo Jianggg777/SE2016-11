@@ -36,6 +36,7 @@ switch($act) {
 	    } else {
 			//set login mark to empty
 			$_SESSION['uid'] = "";
+			$_SESSION['name'] = "";
 			$_SESSION['role'] = -1;
 			echo "<script>"; 
     		echo "window.alert('login failed!')"; 

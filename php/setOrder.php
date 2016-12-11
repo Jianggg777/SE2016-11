@@ -11,17 +11,17 @@ if($cid==9){//禮包
 	$c2=rand(1,8);
 	$c3=rand(1,8);
 	$sql="update user,inventory set user.money=user.money-$price,inventory.num=inventory.num+1  where user.uid=inventory.uid and user.uid=$buyer and inventory.cid=$c1";
-	$result=mysqli_query($db,$sql) or die("db error");  
+	$result=mysqli_query($conn,$sql) or die("db error");  
 	$sql="update user,inventory set inventory.num=inventory.num+1  where user.uid=inventory.uid and user.uid=$buyer and inventory.cid=$c2";
-	$result2=mysqli_query($db,$sql) or die("db error");    
+	$result2=mysqli_query($conn,$sql) or die("db error");    
 	$sql="update user,inventory set inventory.num=inventory.num+1  where user.uid=inventory.uid and user.uid=$buyer and inventory.cid=$c3";
-	$result3=mysqli_query($db,$sql) or die("db error");  
+	$result3=mysqli_query($conn,$sql) or die("db error");  
 	$result="$c1$c2$c3";
 }else{
 	$sql="update user,inventory set user.money=user.money-$price,inventory.num=inventory.num+$num  where user.uid=inventory.uid and user.uid=$buyer and inventory.cid=$cid";//買家
-	$result4=mysqli_query($db,$sql) or die("db error");
+	$result4=mysqli_query($conn,$sql) or die("db error");
 	$sql="update user,inventory set user.money=user.money+$price,inventory.num=inventory.num-$num  where user.uid=inventory.uid and user.uid=$seller and inventory.cid=$cid";//賣家
-	$result=mysqli_query($db,$sql) or die("db error");
+	$result=mysqli_query($conn,$sql) or die("db error");
 }
 echo "$result";
 ?>

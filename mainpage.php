@@ -3,10 +3,10 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>歡迎來到。競標網站</title>
+    <title>歡迎來到競標網站</title>
 </head>
 <?php
-session_start();
+    session_start();
 ?>
 <style type="text/css">
 #banner {
@@ -67,13 +67,15 @@ ul {
 <script language="javascript">
 //php session 給 js使用
 <?php 
-echo 'var name = "'.$_SESSION['name'].'";';
 echo 'var uid = "'.$_SESSION['uid'].'";';
+echo 'var name = "'.$_SESSION['name'].'";';
 ?>
-//session 存進 js
-sessionStorage['uid']=uid;
-sessionStorage['name']=name;
+console.log(uid)
 loadInfo();
+mymoney();
+var i=name;
+i+="！歡迎來到競標平台";
+$("#uinfo").html(i);
 var jsdata;
 var cards= ["白澤", "饕餮", "檮杌","畢方","精衛","水麒麟","帝江","狴犴"];
 //動態顯示交易資訊
@@ -125,9 +127,11 @@ function checkSale(obj){
         data: { "oid": obj.oid }, //optional, you can send field1=10, field2='abc' to URL by this
         error: function(response) { //the call back function when ajax call fails
                 console.log(response);
+                console.log("n",uid);
             },
         success: function(res) { //the call back function when ajax call succeed
                 console.log(res);
+                console.log("y",sessionStorage['uid']);
             }
     });
     //處理交易
@@ -156,12 +160,27 @@ function checkSale(obj){
                             }
                         }
                         alert(info);
+                        mymoney();
                     }
             });
         }
     }
 }
-
+function mymoney(){
+    $.ajax({
+        url: "./php/money.php",
+        dataType: 'html',
+        type: 'POST',
+        data: { "uid": uid }, //optional, you can send field1=10, field2='abc' to URL by this
+        error: function(response) { //the call back function when ajax call fails
+                console.log(response);
+            },
+        success: function(res) { //the call back function when ajax call succeed
+                var d="目前擁有："+res+"元";
+                $("#money").html(d);
+            }
+    });   
+}
 window.onload = function () {
     //每秒檢查
     setInterval(function () {
@@ -172,16 +191,15 @@ window.onload = function () {
 </script>
 
 <body>
-    <div id="main">
-        <h1>This is the main page.</h1>
-    </div>
     <div id="banner">
         <center>
-            <h1 id="uinfo"></h1></center>
+            <h1 id="uinfo"></h1>
+            <div id="money"></div>
+        </center>
     </div>
     <div id="vmenu">
         <ul>
-            <li><a href="#member">我的卡片</a></li>
+            <li><a href="./mycard.php">我的卡片</a></li>
             <li><a href="#ppt">我要換錢</a></li>
             <li><a href="#case">競標紀錄</a></li>
         </ul>
