@@ -7,11 +7,9 @@
 <?php
 session_start();
 //set the login mark to empty
-$_SESSION['uID'] = "";
+$_SESSION['uid'] = "";
 ?>
 <style type="text/css">
-
-
 #login{
   position:relative; 
   top:200px;
@@ -27,7 +25,7 @@ $_SESSION['uID'] = "";
 body {
     margin:0;
     padding:0;
-    background: #000 url(001.jpg) center center fixed no-repeat;
+    background: #000 url(./picture/001.jpg) center center fixed no-repeat;
     -moz-background-size: cover;
     background-size: cover;
     font-size:20pt;
@@ -39,7 +37,7 @@ body {
     <fieldset>
         <legend>登入</legend>
 
-        <form method="post" action="controller.php">
+        <form method="post" action="./php/controller.php">
         <input type="hidden" name="act" value="login">
         username:
         <input type="text" name="id"><br>

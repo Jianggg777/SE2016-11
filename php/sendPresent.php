@@ -8,6 +8,6 @@ $time = date("Y-m-d H:i:s",strtotime("$datetime   +$m   minutes"));
 //隨機底價
 $price=rand(50,200);
 $sql="insert into orders(uid, cid, num, lowprice, time, status, now_price, now_uid) values (0,9,1,$price,'$time','ing',0,0)";
-$result=mysqli_query($db,$sql) or die("db error");
+$result=mysqli_query($conn,$sql) or die("db error");
 echo "$result";
 ?>

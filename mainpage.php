@@ -5,6 +5,9 @@
     <meta charset="UTF-8" />
     <title>歡迎來到。競標網站</title>
 </head>
+<?php
+session_start();
+?>
 <style type="text/css">
 #banner {
     left: 40px;
@@ -60,22 +63,30 @@ ul {
     left: 1350px;
 }
 </style>
-<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
 <script language="javascript">
-var uid = sessionStorage["uid"] = 1;
-loadInfo(uid);
+//php session 給 js使用
+<?php 
+echo 'var name = "'.$_SESSION['name'].'";';
+echo 'var uid = "'.$_SESSION['uid'].'";';
+?>
+//session 存進 js
+sessionStorage['uid']=uid;
+sessionStorage['name']=name;
+loadInfo();
 var jsdata;
 var cards= ["白澤", "饕餮", "檮杌","畢方","精衛","水麒麟","帝江","狴犴"];
-
+//動態顯示交易資訊
 function loadInfo() {
     $.ajax({
-        url: '2.php',
+        url: './php/loadOrder.php',
         dataType: 'html',
         type: 'POST',
         error: function(response) { //the call back function when ajax call fails
             alert('Ajax request failed!');
         },
         success: function(json) { //the call back function when ajax call succeed
+            //board
             jsdata = jQuery.parseJSON(json);//轉成js能用的
             var data="<tr><th>卡片</th><th>數量</th><th>底價</th><th>剩餘時間(sec)</th><th>目前得標者</th><th>目前得標金額</th><th>競標</th></tr><tr>"
             for(var i=0;i<jsdata.length;i++){
@@ -97,13 +108,18 @@ function loadInfo() {
                 }
             }
             $("#board").html(data);
+            //userinfo
+            var userinfo="";
+            userinfo=name+"！歡迎來到競標平台";
+            $("#uinfo").html(userinfo);
         }
     });
 }
-//交易完成
+//檢查交易
 function checkSale(obj){
+    //交易完成
     $.ajax({
-        url: "finOrder.php",
+        url: "./php/finOrder.php",
         dataType: 'json',
         type: 'POST',
         data: { "oid": obj.oid }, //optional, you can send field1=10, field2='abc' to URL by this
@@ -114,12 +130,13 @@ function checkSale(obj){
                 console.log(res);
             }
     });
+    //處理交易
     if(obj.seller==uid||obj.buyer==uid){//是賣方或買方
         if(Number(obj.lowprice)<=Number(obj.price)){//有人出價
             console.log(obj)
             var info;
             $.ajax({
-                url: "setOrder.php",
+                url: "./php/setOrder.php",
                 dataType: 'json',
                 type: 'POST',
                 data: { "num":obj.num ,"buyer":obj.buyer ,"price":obj.price ,"seller": obj.seller,"cid":obj.cid},
@@ -144,11 +161,11 @@ function checkSale(obj){
         }
     }
 }
+
 window.onload = function () {
     //每秒檢查
     setInterval(function () {
         loadInfo();
-
     }, 1000);
 };
 
@@ -160,7 +177,7 @@ window.onload = function () {
     </div>
     <div id="banner">
         <center>
-            <h1>歡迎來到。競標網站</h1></center>
+            <h1 id="uinfo"></h1></center>
     </div>
     <div id="vmenu">
         <ul>
