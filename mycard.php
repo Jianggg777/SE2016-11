@@ -78,7 +78,7 @@ echo $_SESSION['name'];
     </div>
     <div id="vmenu">
         <ul>
-            <li><a href="#member">即時競標</a></li>
+            <li><a href="./myOrders.php">即時競標</a></li>
             <li><a href="#ppt">我要換錢</a></li>
             <li><a href="#case">競標紀錄</a></li>
         </ul>
