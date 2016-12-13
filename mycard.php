@@ -64,7 +64,7 @@ ul {
 #vmenu {
     position: absolute;
     top: 60px;
-    left: 1350px;
+    left: 80%;
 }
 </style>
 <body>
