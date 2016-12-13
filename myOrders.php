@@ -64,7 +64,7 @@ var i=name;
 i+="！歡迎來到競標平台";
 $("#uinfo").html(i);
 var jsdata;
-var cards= ["白澤", "饕餮", "檮杌","畢方","精衛","水麒麟","帝江","狴犴"];
+var cards= ["","白澤", "饕餮", "檮杌","畢方","精衛","水麒麟","帝江","狴犴"];
 //動態顯示交易資訊
 function loadInfo() {
     $.ajax({
@@ -145,11 +145,11 @@ function checkSale(obj){
         data: { "oid": obj.oid }, //optional, you can send field1=10, field2='abc' to URL by this
         error: function(response) { //the call back function when ajax call fails
                 console.log(response);
-                console.log("n",uid);
+                console.log("n");
             },
         success: function(res) { //the call back function when ajax call succeed
                 console.log(res);
-                console.log("y",sessionStorage['uid']);
+                console.log("y");
             }
     });
     //處理交易
