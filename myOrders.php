@@ -36,17 +36,78 @@ ul {
     font-size: 16pt;
     font-family: 標楷體;
 }
-
+#sa{
+     display: block;
+    /*margin: 10px 0px 0px 10px;*/
+    /*text-decoration: none;*/
+    background-color: #ace;
+    height: 36px;
+    width: 150px;
+    text-indent: 20px;
+    color: black;
+    font-size: 15pt;
+    line-height: 36px;
+    border: 5px solid white;
+    border-color: white #999 #999 white;
+}
+#sa:hover {
+    cursor: pointer;
+    background-color: #cae;
+    color: white;
+    border: 5px solid white;
+    border-color: #999 white white #999;
+}
 #vmenu a:hover {
     background-color: gray;
     color: white;
     border: 5px solid white;
     border-color: #999 white white #999;
 }
+
+#content {
+    border-radius: 10px;
+    width: 50%;
+    border: 1px solid #ccc;
+    top: 40px;
+    left: 20px;
+    margin: 40px 10px 10px 27px;
+    padding: 20px;
+    font-size: 20pt;
+    position: absolute;
+    font-family: 標楷體;
+}
+
 #vmenu {
     position: absolute;
     top: 60px;
     left: 80%;
+}
+.flipbox{
+    background-color: rgba(0,0,0,0.9);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: 1;
+}
+#flipcontainer{
+    position: absolute;
+    text-align: center;
+    padding: 10px;
+    width: 50%;
+    height: 50%;
+    top: 25%;
+    right: 25%;
+    border-radius: 10px;
+    z-index: 2;
+    background-color:rgba(255,255,255,1);
+}
+#moneyerr{
+    color: red;
+}
+.hide{
+    display: none;
 }
 </style>
 <script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
@@ -56,15 +117,25 @@ ul {
 echo 'var uid = "'.$_SESSION['uid'].'";';
 echo 'var name = "'.$_SESSION['name'].'";';
 ?>
-console.log(uid,name)
+console.log(uid)
 loadInfo();
 loadInfo2();
 mymoney();
 var i=name;
+var gg=0,cc,ll;
 i+="！歡迎來到競標平台";
 $("#uinfo").html(i);
 var jsdata;
 var cards= ["","白澤", "饕餮", "檮杌","畢方","精衛","水麒麟","帝江","狴犴"];
+//動態顯示交易資訊
+function sentbid(aa,bb,ee) { //oid price
+    gg=aa;
+    cc=bb;   
+    ll=ee;
+    $('.flipbox').height( $(document).height());
+    $('.flipbox').removeClass('hide');
+    $('#moneyerr').addClass('hide');
+}
 //動態顯示交易資訊
 function loadInfo() {
     $.ajax({
@@ -94,13 +165,13 @@ function loadInfo() {
                 if(uid==jsdata[i].seller){
                     data+="<td></td></tr>"
                 }else{
-                    data+="<td><a href='bid.php?uid="+uid+"'>競價</a></td></tr>"
+                    data+=`<td><span id='sa' onclick=sentbid(${jsdata[i].oid},${jsdata[i].price},${jsdata[i].lowprice})>競價</span></td></tr>`
                 }
             }
             $("#board").html(data);
             //userinfo
             var userinfo="";
-            userinfo=name+"的交易列表";
+            userinfo=name+"當前的交易清單";
             $("#uinfo").html(userinfo);
         }
     });
@@ -145,11 +216,11 @@ function checkSale(obj){
         data: { "oid": obj.oid }, //optional, you can send field1=10, field2='abc' to URL by this
         error: function(response) { //the call back function when ajax call fails
                 console.log(response);
-                console.log("n");
+                console.log("nnnn");
             },
         success: function(res) { //the call back function when ajax call succeed
                 console.log(res);
-                console.log("y");
+                console.log("yyyyyy");
             }
     });
     //處理交易
@@ -184,6 +255,33 @@ function checkSale(obj){
         }
     }
 }
+sentdata=()=>{
+    data=parseInt($('input#data').val());
+    if(data<=cc||data<ll){
+        $("#moneyerr").removeClass("hide")
+    }
+    if(typeof data==="number"&&!isNaN(data)&&data>cc&&data>=ll)
+    {
+        $.ajax({
+        url: "./php/update.php",
+        dataType: 'json',
+        type: 'POST',
+        data: { "uid": uid ,"data":data,"oid":gg}, //optional, you can send field1=10, field2='abc' to URL by this
+        error: function(response) { //the call back function when ajax call fails
+                console.log(response);
+            },
+        success: function(res) { //the call back function when ajax call succeed
+                console.log(res)
+                
+            }
+    });   
+         removeflipbox();
+    }
+}
+removeflipbox=()=>{
+    $('.flipbox').addClass('hide');
+
+}
 function mymoney(){
     $.ajax({
         url: "./php/money.php",
@@ -216,14 +314,24 @@ window.onload = function () {
             <div id="money"></div>
         </center>
     </div>
+    <a href="./mainpage.php">回首頁</a>
+    <a href="./loginForm.php">登出</a>
+    <div class="flipbox hide">
+        <div id="flipcontainer">
+            <span>請輸入價格</span>
+            <input id="data" type="text"></input>
+            <button onclick=sentdata()>送出</button>
+            <button onclick=removeflipbox()>取消</button>
+            <h5 id="moneyerr" class="hide ">請確認價格</h5>
+        </div>        
+    </div>
     <div id="vmenu">
         <ul>
             <li><a href="./mycard.php">我的卡片</a></li>
-            <li><a href="#ppt">我要換錢</a></li>
             <li><a href="#case">競標紀錄</a></li>
         </ul>
     </div>
-    <fieldset>
+    <fieldset >
         <legend>正在競標</legend>
         <table border=3 cellpadding="5" id="board">
         </table>
@@ -236,3 +344,4 @@ window.onload = function () {
 </body>
 
 </html>
+
