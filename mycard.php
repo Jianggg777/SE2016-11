@@ -8,7 +8,6 @@
     <script type="text/javascript">
         removeflipbox=()=>{
             $('#sell').addClass('hide');
-
             $('#turnmoney').addClass('hide');
         }
         sentbid=(a,b)=> {
@@ -23,7 +22,23 @@
                 $('#turnmoney').removeClass('hide');
               
             }
-
+        function showPic(i){
+            $('#d').show();
+            $('#pic').attr('src',"./picture/"+i+".jpg");
+            $.ajax({
+                url: './php/cardInfo.php',
+                data: { "cid": i+1 },
+                dataType: 'html',
+                type: 'POST',
+                error: function(response) { //the call back function when ajax call fails
+                    alert('Ajax request failed!');
+                },
+                success: function(json) { //the call back function when ajax call succeed
+                    jsdata = jQuery.parseJSON(json);//轉成js能用的
+                    $('#infomation').html(jsdata);
+                }
+            });
+        }
     </script>
 </head>
 <?php
@@ -81,8 +96,6 @@ ul {
     border-radius: 10px;
     z-index: 2;
     background-color:rgba(255,255,255,1);
-   
-
 }
 #flipcontainer>form{
     display: flex;
@@ -128,15 +141,18 @@ flex: 1;
     border: 5px solid white;
     border-color: #999 white white #999;
 }
+.boxblur20{
+  -webkit-filter: opacity(0.8) 
+}
 #content {
     border-radius: 10px;
-    width: 50%;
+    width: 70%;
     border: 1px solid #ccc;
     top: 40px;
     left: 20px;
     margin: 40px 10px 10px 27px;
     padding: 20px;
-    font-size: 20pt;
+    font-size: 15pt;
     position: absolute;
     font-family: 標楷體;
 }
@@ -169,21 +185,23 @@ echo $_SESSION['name'];
     </div>
     <fieldset id="content">
         <legend>卡片列表</legend>
-        <table border=3 cellpadding="5">
+        <table border=3 cellpadding="5" align="left">
             <tr>
                 <th>卡片種類</th>
                 <th>數量</th>
                 <th>賣出</th>
             </tr>
 <?php
-while ( $rs=mysqli_fetch_assoc($result)) {
-    echo "<tr><td>$rs[name]</td>";
+$i=0;
+while ( $rs=mysqli_fetch_assoc($result)) {   
+    echo "<tr><td> <a href='javascript: showPic($i)'>$rs[name]</a></td>";
     echo "<td>$rs[num]</td>";
     if($rs['num']>0){
         echo "<td><span id='sa' onclick=sentbid($rs[cid],$rs[num])>賣</span></td></tr>";
     }else{
         echo "<td></td></tr>";
     }
+    $i++;
 }
 ?>
 <?php
@@ -193,10 +211,11 @@ while ( $rs=mysqli_fetch_assoc($result)) {
     $rs=mysqli_fetch_assoc($result1);
     
 ?>
-
-
-
         </table>
+        <div id="d" style="display:none">
+            <img id="pic" align="left" class="boxblur20" style="position:relative;left:20px;top:50px">
+            <span id="infomation" style="position:relative;left:20px;top:50px"></span>
+        </div>
     </fieldset>
     <div class="flipbox hide" id='sell'>
         <div id="flipcontainer">
