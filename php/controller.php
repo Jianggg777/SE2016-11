@@ -45,7 +45,7 @@ switch($act) {
     		echo "location.href='../loginForm.php'"; 
     		echo "</script>"; 
 		}
-		case "sign":
+		
 		
 	default:
 }
