@@ -3,12 +3,31 @@
 <head>
 <meta charset="UTF-8" />
 <title>登入</title>
+<script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
+<script>
+        removeflipbox=()=>{
+            $('#sign').addClass('hide');
+        }
+        sign=()=> {
+                $('#sign').height( $(document).height());
+                $('#sign').removeClass('hide');
+              
+            }
+</script>
 </head>
 <?php
 session_start();
 //set the login mark to empty
 $_SESSION['uid'] = "";
 ?>
+<!-- <?php
+    // require("./php/dbconnect.php");
+    // $sql="select name from user  " ;
+    // $result1=mysqli_query($conn,$sql) or die("db error");
+    // // $rs=mysqli_fetch_assoc($result1);
+    // while ( $rs=mysqli_fetch_assoc($result)) {
+    // echo $rs['name'];}
+?> -->
 <style type="text/css">
 #login{
   position:relative; 
@@ -30,8 +49,64 @@ body {
     background-size: cover;
     font-size:20pt;
 }
+#sa{
+     display: block;
+    /*margin: 10px 0px 0px 10px;*/
+    /*text-decoration: none;*/
+    background-color: #ace;
+    height: 36px;
+    width: 150px;
+    text-indent: 20px;
+    color: black;
+    font-size: 15pt;
+    line-height: 36px;
+    border: 5px solid white;
+    border-color: white #999 #999 white;
+}
+#sa:hover {
+    cursor: pointer;
+    background-color: #cae;
+    color: white;
+    border: 5px solid white;
+    border-color: #999 white white #999;
+}
+.flipbox{
+    background-color: rgba(0,0,0,0.94);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: 1;
+}
+#flipcontainer{
+    position: absolute;
+    text-align: center;
+    padding: 10px;
+    width: 50%;
+    height: 50%;
+    top: 25%;
+    right: 25%;
+    border-radius: 10px;
+    z-index: 2;
+    background-color:rgba(255,255,255,1);
+   
+
+}
+#flipcontainer>form{
+    display: flex;
+    flex-direction: column;
+}
+
+#flipcontainer>form>input{
+flex: 1;
+}
+.hide{
+    display: none;
+}
 </style>
 <body>
+
 <div id="login">
 <h1>WELCOME</h1>
     <fieldset>
@@ -44,9 +119,28 @@ body {
         password:
         <input type="password" name="pwd"> 
         <input type="submit" value="登入">
+        <!-- <input type="submit" name='sign' value="註冊"> -->
         </form>
-       
-    </fieldset>
+        <td><span id='sa' onclick=sign()>註冊</span></td></tr>
+  
+        
+    </fieldset>  
+<fieldset>
+    </div>
+        <div class="flipbox hide" id='sign'>
+        <div id="flipcontainer">
+            
+            <span >請輸入帳號  </span>
+            <form action="./php/sign.php"  method="post" id="atable">
+            <input id="data2" type="text" name="name"  required="required" >
+            <span >請輸入密碼  </span>
+            <input type="password"  name="pwd" required="required"></input>
+            <input type="submit" value="確定"></input>
+            
+            </form>
+            <button onclick=removeflipbox()>取消</button>
+        </div> 
+        </fieldset>     
 </div>
 </body>
 </html>
