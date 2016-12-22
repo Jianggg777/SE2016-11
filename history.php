@@ -3,10 +3,17 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>我的交易</title>
+    <title>我的競價紀錄</title>
+    <script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript">
+    </script>
 </head>
 <?php
     session_start();
+    require("./php/dbconnect.php");
+    $uid = mysqli_real_escape_string($conn,$_SESSION['uid']);
+    $sql = "select orders.now_uid,user.name,orders.num,price,orders.cid,bid.time from bid,orders,user where bid.uid=$uid and bid.oid=orders.oid and user.uid=orders.uid and orders.status='end'";
+    $result = mysqli_query($conn,$sql) or die("db error");  
 ?>
 <style type="text/css">
 /*----vmenu-style-start1-----*/
@@ -370,179 +377,117 @@ body{
 }
 /*---------btn_style_end---------*/
 </style>
-<script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
+<body>
+    <div id="banner">
+        <center>
+            <h1 id="uinfo">
+<?php
+echo $_SESSION['name'];
+?>    的競價紀錄            
+            </h1>
+            <div id="money"></div>
+            </center>
+    </div>
+    <a id="mainpage" href="./mainpage.php"><img src="./picture/home1.png" style="height:50px;width:50px;"></a>
+    <a id="logout" href="./loginForm.php"><img src="./picture/logout.png" style="height:50px;width:50px;"></a>
+    <div id="vmenu">
+        <ul>
+            <li><a href="./mycard.php" class="style_prevu_kit">我的卡片</a></li>
+            <li><a href="myOrders.php" class="style_prevu_kit" >我的交易</a></li>
+            <li><a onclick=sentmoney() class="style_prevu_kit">我要換錢</a></li>
+        </ul>
+    </div>
+    <fieldset id="content" style="border-style:ridge;">
+        <legend>競價紀錄</legend>
+        <table border=3 cellpadding="5" align="left">
+            <tr>
+                <th>賣方</th>
+                <th>卡片</th>
+                <th>數量</th>
+                <th>出價金額</th>
+                <th>出價時間</th>
+                <th>得標</th>
+            </tr>
+<?php
+$i=0;
+$cards= ["","白澤", "饕餮", "檮杌","畢方","精衛","水麒麟","帝江","狴犴","卡片禮包"];
+while ( $rs=mysqli_fetch_assoc($result)) { 
+    if($rs['name']=='-'){
+        echo "<td>系統</td>";
+    }else{
+        echo "<td>$rs[name]</td>";
+    }
+    $cid=$rs['cid'];
+    echo "<td>$cards[$cid]</td>";
+    echo "<td>$rs[num]</td>";
+    echo "<td>$rs[price]</td>";
+    echo "<td>$rs[time]</td>";
+    if($rs['now_uid']==$uid){
+        echo "<td>得標</td></tr>";
+    }else{
+        echo "<td>未得標</td></tr>";
+    }
+    $i++;
+}
+?>
+<?php
+
+    $sql="select min(num) minmum,max(num) maxmun from inventory where uid=$uid " ;
+    $result1=mysqli_query($conn,$sql) or die("db error");
+    $rs=mysqli_fetch_assoc($result1);
+    
+?>
+        </table>
+        <div id="d" style="display:none">
+            <img id="pic" align="left" style="position:relative;left:20px;">
+            <span id="infomation" style="position:relative;left:20px;"></span>
+        </div>
+    </fieldset>
+    <div class="flipbox hide" id='sell'>
+        <div id="flipcontainer">
+            
+            <span >請輸入數量   </span>
+            <form action="./php/sellmycard.php"  method="post" id="atable">
+            <input id="data"  type="number" name="num" min="1"value=1 required="required" >
+            <span >底價  </span>
+            <input id="money" name="money" type="number" required="required">            
+            <span>截止時間  </span>
+            <input type="datetime-local" name="date" required="required">
+            
+            <input class="hide" name="cid" id="ddd" value=""></input>
+            <input class="hide" name="uid" value="<?php echo  $uid ; ?>"></input>
+            <div><input type="submit"></div>
+            
+            </form>
+            <button onclick=removeflipbox()>取消</button>
+            <h5 id="moneyerr" class="hide ">請確認價格</h5>
+        </div>        
+
+
+    </div>
+
+        <div class="flipbox hide" id='turnmoney'>
+        <div id="flipcontainer">
+            
+            <span >請輸入數量   </span>
+            <form action="./turn.php"  method="post" id="btable">
+            <input id="data2" type="number" name="num2" max=<?php echo $rs['minmum'] ?> min=0 value=0 required="required" >
+            <input class="hide" name="uid" value="<?php echo $uid ; ?>"></input>
+            <div><input type="submit" value="確定"></input></div>
+            
+            </form>
+            <button onclick=removeflipbox()>取消</button>
+            <h5 id="turnmoney" class="hide ">請確認數量</h5>
+        </div>        
+
+
+    </div>
 <script language="javascript">
-//php session 給 js使用
 <?php 
 echo 'var uid = "'.$_SESSION['uid'].'";';
 echo 'var name = "'.$_SESSION['name'].'";';
 ?>
-console.log(uid)
-loadInfo();
-loadInfo2();
 mymoney();
-var i=name;
-var gg=0,cc,ll;
-i+="！歡迎來到競標平台";
-$("#uinfo").html(i);
-var jsdata;
-var ownmoney;
-var cards= ["","白澤", "饕餮", "檮杌","畢方","精衛","水麒麟","帝江","狴犴"];
-//動態顯示交易資訊
-function sentbid(aa,bb,ee) { //oid price
-    gg=aa;
-    cc=bb;   
-    ll=ee;
-    $('.flipbox').height( $(document).height());
-    $('.flipbox').removeClass('hide');
-    $('#moneyerr').addClass('hide');
-}
-//動態顯示交易資訊
-function loadInfo() {
-    $.ajax({
-        url: './php/loadOrder2.php',
-        dataType: 'html',
-        type: 'POST',
-        data: { "uid": uid }, //optional, you can send field1=10, field2='abc' to URL by this
-        error: function(response) { //the call back function when ajax call fails
-            alert('Ajax request failed!');
-        },
-        success: function(json) { //the call back function when ajax call succeed
-            //board
-            jsdata = jQuery.parseJSON(json);//轉成js能用的
-            var data="<tr><th>卡片</th><th>數量</th><th>底價</th><th>剩餘時間(sec)</th><th>目前得標者</th><th>目前得標金額</th><th>競標</th></tr><tr>"
-            for(var i=0;i<jsdata.length;i++){
-                data+="<td>"+jsdata[i].cname+"</td><td>"+jsdata[i].num+"</td><td>"+jsdata[i].lowprice+"</td>";
-                now= new Date();
-                tday=new Date(jsdata[i]['time']);
-                time=Math.floor((tday-now)/1000)
-                if(time<=0){
-                    checkSale(jsdata[i]);
-                    data+="<td>0</td>";
-                }else{
-                    data+="<td>"+time+"</td>";
-                }
-                data+="<td>"+jsdata[i].name+"</td><td>"+jsdata[i].price+"</td>";
-                if(uid==jsdata[i].seller){
-                    data+="<td></td></tr>"
-                }else{
-                    data+=`<td><input id='buttons' class='btn yellow' type=button value=競價 onclick=sentbid(${jsdata[i].oid},${jsdata[i].price},${jsdata[i].lowprice})></td></tr>`
-                }
-            }
-            $("#board").html(data);
-            //userinfo
-            var userinfo="";
-            userinfo=name+"當前的交易";
-            $("#uinfo").html(userinfo);
-        }
-    });
-}
-function loadInfo2() {
-    $.ajax({
-        url: './php/loadOrder3.php',
-        dataType: 'html',
-        type: 'POST',
-        data: { "uid": uid }, //optional, you can send field1=10, field2='abc' to URL by this
-        error: function(response) { //the call back function when ajax call fails
-            alert('Ajax request failed!');
-        },
-        success: function(json) { //the call back function when ajax call succeed
-            //board
-            jsdata = jQuery.parseJSON(json);//轉成js能用的
-            var data="<tr><th>卡片</th><th>數量</th><th>底價</th><th>剩餘時間(sec)</th><th>目前得標者</th><th>目前得標金額</th></tr><tr>"
-            for(var i=0;i<jsdata.length;i++){
-                data+="<td>"+jsdata[i].cname+"</td><td>"+jsdata[i].num+"</td><td>"+jsdata[i].lowprice+"</td>";
-                now= new Date();
-                tday=new Date(jsdata[i]['time']);
-                time=Math.floor((tday-now)/1000)
-                if(time<=0){
-                    checkSale(jsdata[i]);
-                    data+="<td>0</td>";
-                }else{
-                    data+="<td>"+time+"</td>";
-                }
-                data+="<td>"+jsdata[i].name+"</td><td>"+jsdata[i].price+"</td></tr>";
-            }
-            $("#board2").html(data);
-        }
-    });
-}
-//檢查交易
-function checkSale(obj){
-    //交易完成
-    $.ajax({
-        url: "./php/finOrder.php",
-        dataType: 'json',
-        type: 'POST',
-        data: { "oid": obj.oid }, //optional, you can send field1=10, field2='abc' to URL by this
-        error: function(response) { //the call back function when ajax call fails
-                console.log(response);
-                console.log("nnnn");
-            },
-        success: function(res) { //the call back function when ajax call succeed
-                console.log(res);
-                console.log("yyyyyy");
-            }
-    });
-    //處理交易
-    if(obj.seller==uid||obj.buyer==uid){//是賣方或買方
-        if(Number(obj.lowprice)<=Number(obj.price)){//有人出價
-            console.log(obj)
-            var info;
-            $.ajax({
-                url: "./php/setOrder.php",
-                dataType: 'json',
-                type: 'POST',
-                data: { "num":obj.num ,"buyer":obj.buyer ,"price":obj.price ,"seller": obj.seller,"cid":obj.cid},
-                error: function(response) { //the call back function when ajax call fails
-                        console.log(response);
-                    },
-                success: function(res) { //the call back function when ajax call succeed
-                        var info="恭喜您，";
-                        if(obj.seller==uid){//賣方
-                            info+="賣掉"+obj.cname+"卡"+obj.num+"張，共獲得"+obj.price+"元";
-                        }else if(obj.buyer==uid){//買方
-                            if(Number(obj.cid)==9){
-　                              var c = res.toString().split("");
-                                info+="得標到卡片禮包(*3)，內含："+cards[c[0]]+" "+cards[c[1]]+" "+cards[c[2]];
-                            }else{
-                                info+="得標到"+obj.cname+"卡"+obj.num+"張，總共"+obj.price+"元";
-                            }
-                        }
-                        alert(info);
-                        mymoney();
-                    }
-            });
-        }
-    }
-}
-sentdata=()=>{
-    data=parseInt($('input#data').val());
-    if(data<=cc||data<ll||data>ownmoney){
-        $("#moneyerr").removeClass("hide")
-    }
-    if(typeof data==="number"&&!isNaN(data)&&data>cc&&data>=ll&&data<=ownmoney)
-    {
-        $.ajax({
-        url: "./php/update.php",
-        dataType: 'json',
-        type: 'POST',
-        data: { "uid": uid ,"data":data,"oid":gg}, //optional, you can send field1=10, field2='abc' to URL by this
-        error: function(response) { //the call back function when ajax call fails
-                console.log(response);
-            },
-        success: function(res) { //the call back function when ajax call succeed
-                console.log(res)
-                
-            }
-    });   
-         removeflipbox();
-    }
-}
-removeflipbox=()=>{
-    $('.flipbox').addClass('hide');
-
-}
 function mymoney(){
     $.ajax({
         url: "./php/money.php",
@@ -553,57 +498,12 @@ function mymoney(){
                 console.log(response);
             },
         success: function(res) { //the call back function when ajax call succeed
-                ownmoney=parseInt(res);
                 var d="目前擁有："+"<img src='./picture/coin.png' style='width:20px;'>"+res;
                 $("#money").html(d);
             }
     });   
 }
-window.onload = function () {
-    //每秒檢查
-    setInterval(function () {
-        loadInfo();
-        loadInfo2();
-    }, 1000);
-};
-
 </script>
-
-<body>
-    <div id="banner">
-        <center>
-            <h1 id="uinfo"></h1>
-            <div id="money"></div>
-        </center>
-    </div>
-    <a id="mainpage" href="./mainpage.php"><img src="./picture/home1.png" style="height:50px;width:50px;"></a>
-    <a id="logout" href="./loginForm.php"><img src="./picture/logout.png" style="height:50px;width:50px;"></a>
-    <div class="flipbox hide">
-        <div id="flipcontainer">
-            <span>請輸入價格</span>
-            <input id="data" type="text"></input>
-            <button onclick=sentdata()>送出</button>
-            <button onclick=removeflipbox()>取消</button>
-            <h5 id="moneyerr" class="hide ">請確認價格</h5>
-        </div>        
-    </div>
-    <div id="vmenu">
-        <ul>
-            <li><a href="./mycard.php" class="style_prevu_kit">我的卡片</a></li>
-            <li><a href="./history.php" class="style_prevu_kit" >競標紀錄</a></li>
-        </ul>
-    </div>
-    <fieldset id="content" style="border-style:ridge;">
-        <legend>正在競標</legend>
-        <table border=3 cellpadding="5" id="board">
-        </table>
-    </fieldset>
-    <fieldset id="content2" style="border-style:ridge;">
-        <legend>正在販賣</legend>
-        <table border=3 cellpadding="5" id="board2">
-        </table>
-    </fieldset>
 </body>
 
 </html>
-

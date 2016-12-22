@@ -18,7 +18,7 @@ switch($act) {
 			$_SESSION['role'] = $arr['role'];
 			$_SESSION['uid']=$arr['uid'];
 			echo "<script>"; 
-    		echo "window.alert('successful')"; 
+    		echo "window.alert('登入成功！')"; 
     		echo "</script>"; 
     		echo "<script>"; 
     		echo "location.href='../mainpage.php'"; 

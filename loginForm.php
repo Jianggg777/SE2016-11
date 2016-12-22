@@ -33,7 +33,7 @@ $_SESSION['uid'] = "";
   position:relative; 
   top:200px;
   left:300px;
-  width:500px;
+  width:550px;
   
   clear: both;
   background: rgba(1000%,10000%,1000%,0.3);
@@ -48,6 +48,14 @@ body {
     -moz-background-size: cover;
     background-size: cover;
     font-size:20pt;
+    font-family:Microsoft JhengHei;
+}
+#loginbtn{
+    position:relative;
+    font-family:Microsoft JhengHei;
+    font-size:15pt;
+    left:70%;
+    border-radius:50%;
 }
 #sa{
      display: block;
@@ -71,7 +79,7 @@ body {
     border-color: #999 white white #999;
 }
 .flipbox{
-    background-color: rgba(0,0,0,0.94);
+    background-color: rgba(0,0,0,0.6);
     width: 100%;
     height: 100%;
     top: 0;
@@ -90,8 +98,6 @@ body {
     border-radius: 10px;
     z-index: 2;
     background-color:rgba(255,255,255,1);
-   
-
 }
 #flipcontainer>form{
     display: flex;
@@ -111,36 +117,28 @@ flex: 1;
 <h1>WELCOME</h1>
     <fieldset>
         <legend>登入</legend>
-
         <form method="post" action="./php/controller.php">
         <input type="hidden" name="act" value="login">
         username:
         <input type="text" name="id"><br>
         password:
-        <input type="password" name="pwd"> 
+        <input type="password" name="pwd"> <br>
+        <input type="button"  onclick=sign() value="註冊"></span>
         <input type="submit" value="登入">
-        <!-- <input type="submit" name='sign' value="註冊"> -->
         </form>
-        <td><span id='sa' onclick=sign()>註冊</span></td></tr>
-  
-        
     </fieldset>  
-<fieldset>
-    </div>
-        <div class="flipbox hide" id='sign'>
-        <div id="flipcontainer">
-            
-            <span >請輸入帳號  </span>
-            <form action="./php/sign.php"  method="post" id="atable">
+</div>
+<div class="flipbox hide" id='sign'>
+    <div id="flipcontainer">
+        <span >請輸入帳號  </span>
+        <form action="./php/sign.php"  method="post" id="atable">
             <input id="data2" type="text" name="name"  required="required" >
             <span >請輸入密碼  </span>
-            <input type="password"  name="pwd" required="required"></input>
-            <input type="submit" value="確定"></input>
-            
-            </form>
-            <button onclick=removeflipbox()>取消</button>
-        </div> 
-        </fieldset>     
+            <input type="password" name="pwd" required="required"></input>
+            <div><input type="submit"value="確定"></input></div>
+        </form>
+        <button onclick=removeflipbox()>取消</button>
+    </div>    
 </div>
 </body>
 </html>
