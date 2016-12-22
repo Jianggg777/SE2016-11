@@ -9,7 +9,7 @@ $sql="SELECT now_price,cid,num,uid from orders where `oid`=$oid";
 $result1=mysqli_query($conn,$sql) or die("db error2");
 $rs=mysqli_fetch_assoc($result1);
 if($rs['now_price']==0){//退還卡片
-    $sql="update `inventory` SET `num`=$rs[num] WHERE `uid`=$rs[uid] and `cid`=$rs[cid]";
+    $sql="update `inventory` SET `num`=`num`+$rs[num] WHERE `uid`=$rs[uid] and `cid`=$rs[cid]";
     $result1=mysqli_query($conn,$sql) or die("db error2333");
 }
 echo "$result1";
