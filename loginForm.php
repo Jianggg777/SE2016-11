@@ -29,6 +29,8 @@ $_SESSION['uid'] = "";
     // echo $rs['name'];}
 ?> -->
 <style type="text/css">
+@import url('https://fonts.googleapis.com/css?family=Permanent+Marker');
+@import url(http://fonts.googleapis.com/earlyaccess/cwtexyen.css);
 #login{
   position:relative; 
   top:200px;
@@ -48,13 +50,21 @@ body {
     -moz-background-size: cover;
     background-size: cover;
     font-size:20pt;
-    font-family:Microsoft JhengHei;
+    font-family: 'Permanent Marker', cursive;
 }
 #loginbtn{
     position:relative;
-    font-family:Microsoft JhengHei;
-    font-size:15pt;
-    left:70%;
+    padding:10px 10px;
+    font-size:20pt;
+    left:60%;
+    border-radius:50%;
+}
+#register{
+    position:relative;
+    padding:10px 10px;
+    font-family: 'cwTeXYen', sans-serif;
+    font-size:20pt;
+    left:60%;
     border-radius:50%;
 }
 #sa{
@@ -110,21 +120,24 @@ flex: 1;
 .hide{
     display: none;
 }
+#leg_title{
+    font-family: 'cwTeXYen', sans-serif;
+}
 </style>
 <body>
 
 <div id="login">
 <h1>WELCOME</h1>
     <fieldset>
-        <legend>登入</legend>
+        <legend id="leg_title">登入</legend>
         <form method="post" action="./php/controller.php">
         <input type="hidden" name="act" value="login">
         username:
         <input type="text" name="id"><br>
         password:
         <input type="password" name="pwd"> <br>
-        <input type="button"  onclick=sign() value="註冊"></span>
-        <input type="submit" value="登入">
+        <input id="register"type="button"  onclick=sign() value="註冊"></span>
+        <input id="loginbtn" style="font-family: 'cwTeXYen', sans-serif;"type="submit" value="登入">
         </form>
     </fieldset>  
 </div>

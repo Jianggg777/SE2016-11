@@ -342,7 +342,7 @@ body{
     font-family:Microsoft JhengHei;
     margin:0;
     padding:0;
-    background: #000 url(./picture/bg3.jpg) center center fixed no-repeat;
+    background: #000 url(./picture/bg1_1.jpg) center center fixed no-repeat;
     -moz-background-size: cover;
     background-size: cover;
 }
@@ -380,7 +380,7 @@ body{
 <body>
     <div id="banner">
         <center>
-            <h1 id="uinfo">
+            <h1 id="uinfo" >
 <?php
 echo $_SESSION['name'];
 ?>    的競價紀錄            
