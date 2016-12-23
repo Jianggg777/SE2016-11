@@ -499,7 +499,7 @@ window.onload = function () {
 <body>
     <div id="banner">
         <center>
-            <h1 id="uinfo"></h1>
+            <h1 id="uinfo" ></h1>
             <div id="money"></div>
         </center>
     </div>

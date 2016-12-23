@@ -380,6 +380,10 @@ body{
   background-color: #FFDE29;
 }
 /*---------btn_style_end---------*/
+#infomation{
+  clear: both;
+  background: rgba(1000%,10000%,1000%,0.3);
+}
 </style>
 <body>
     <div id="banner">
