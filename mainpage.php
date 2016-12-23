@@ -413,7 +413,7 @@ function checkSale(obj){
         url: "./php/finOrder.php",
         dataType: 'json',
         type: 'POST',
-        data: { "oid": obj.oid }, //optional, you can send field1=10, field2='abc' to URL by this
+        data: { "oid": obj.oid,"num":obj.num ,"buyer":obj.buyer ,"price":obj.price ,"seller": obj.seller,"cid":obj.cid},
         error: function(response) { //the call back function when ajax call fails
                 console.log(response);
                 console.log("n",uid);
@@ -425,36 +425,24 @@ function checkSale(obj){
     });
     //處理交易
     if(obj.seller==uid||obj.buyer==uid){//是賣方或買方
-        if(Number(obj.lowprice)<=Number(obj.price)){//有人出價
             console.log(obj)
             var info;
-            $.ajax({
-                url: "./php/setOrder.php",
-                dataType: 'json',
-                type: 'POST',
-                data: { "num":obj.num ,"buyer":obj.buyer ,"price":obj.price ,"seller": obj.seller,"cid":obj.cid},
-                error: function(response) { //the call back function when ajax call fails
-                        console.log(response);
-                    },
-                success: function(res) { //the call back function when ajax call succeed
-                        var info="恭喜您，";
-                        if(obj.seller==uid){//賣方
-                            info+="賣掉"+obj.cname+"卡"+obj.num+"張，共獲得"+obj.price+"元";
-                        }else if(obj.buyer==uid){//買方
-                            if(Number(obj.cid)==9){
-　                              var c = res.toString().split("");
-                                info+="得標到卡片禮包(*3)，內含："+cards[c[0]]+" "+cards[c[1]]+" "+cards[c[2]];
-                            }else{
-                                info+="得標到"+obj.cname+"卡"+obj.num+"張，總共"+obj.price+"元";
-                            }
-                        }
-                        alert(info);
-                        mymoney();
-                    }
-            });
-        }
+            var info="恭喜您，";
+            if(obj.seller==uid){//賣方
+                info+="賣掉"+obj.cname+"卡"+obj.num+"張，共獲得"+obj.price+"元";
+            }else if(obj.buyer==uid){//買方
+                if(Number(obj.cid)==9){
+　                  var c = res.toString().split("");
+                    info+="得標到卡片禮包(*3)，內含："+cards[c[0]]+" "+cards[c[1]]+" "+cards[c[2]];
+                }else{
+                    info+="得標到"+obj.cname+"卡"+obj.num+"張，總共"+obj.price+"元";
+                }
+            }
+            alert(info);
+            mymoney();
     }
 }
+
 sentdata=()=>{
     data=parseInt($('input#data').val());
     if(data<=cc||data<ll||data>ownmoney){
