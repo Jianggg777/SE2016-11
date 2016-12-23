@@ -34,7 +34,7 @@ $_SESSION['uid'] = "";
 #login{
   position:relative; 
   top:200px;
-  left:300px;
+  left:320px;
   width:550px;
   
   clear: both;
@@ -50,7 +50,7 @@ body {
     -moz-background-size: cover;
     background-size: cover;
     font-size:20pt;
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Lucida Console','Permanent Marker', cursive;
 }
 #loginbtn{
     position:relative;
@@ -121,7 +121,7 @@ flex: 1;
     display: none;
 }
 #leg_title{
-    font-family: 'cwTeXYen', sans-serif;
+    font-family:'cwTeXYen', sans-serif;
 }
 </style>
 <body>

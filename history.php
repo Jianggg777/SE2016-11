@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>我的競價紀錄</title>
+    <title>我的交易紀錄</title>
     <script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript">
     </script>
@@ -12,7 +12,7 @@
     session_start();
     require("./php/dbconnect.php");
     $uid = mysqli_real_escape_string($conn,$_SESSION['uid']);
-    $sql = "select orders.now_uid,user.name,orders.num,price,orders.cid,bid.time from bid,orders,user where bid.uid=$uid and bid.oid=orders.oid and user.uid=orders.uid and orders.status='end'";
+    $sql = "select orders.now_uid,user.name,orders.num,price,orders.cid,bid.time from bid,orders,user where bid.uid=$uid and bid.oid=orders.oid and user.uid=orders.uid and orders.status='end' ORDER BY bid.time DESC";
     $result = mysqli_query($conn,$sql) or die("db error");  
 ?>
 <style type="text/css">
@@ -383,7 +383,7 @@ body{
             <h1 id="uinfo" >
 <?php
 echo $_SESSION['name'];
-?>    的競價紀錄            
+?>    的交易紀錄            
             </h1>
             <div id="money"></div>
             </center>
@@ -394,7 +394,6 @@ echo $_SESSION['name'];
         <ul>
             <li><a href="./mycard.php" class="style_prevu_kit">我的卡片</a></li>
             <li><a href="myOrders.php" class="style_prevu_kit" >我的交易</a></li>
-            <li><a onclick=sentmoney() class="style_prevu_kit">我要換錢</a></li>
         </ul>
     </div>
     <fieldset id="content" style="border-style:ridge;">
@@ -430,58 +429,42 @@ while ( $rs=mysqli_fetch_assoc($result)) {
     $i++;
 }
 ?>
+    </table>
+    </fieldset>
+    <fieldset id="content2" style="border-style:ridge;">
+        <legend>販賣紀錄</legend>
+        <table border=3 cellpadding="5" id="board2">
+            <tr>
+                <th>買方</th>
+                <th>卡片</th>
+                <th>數量</th>
+                <th>出價金額</th>
+                <th>出價時間</th>
+            </tr>
 <?php
-
-    $sql="select min(num) minmum,max(num) maxmun from inventory where uid=$uid " ;
-    $result1=mysqli_query($conn,$sql) or die("db error");
-    $rs=mysqli_fetch_assoc($result1);
-    
+$sql = "select user.name,orders.now_price,time,num,cid from orders,user where orders.uid=$uid and status='end' and orders.now_uid=user.uid ORDER BY orders.time DESC";
+$result2 = mysqli_query($conn,$sql) or die("db error");  
+$i=0;
+while ( $rs=mysqli_fetch_assoc($result2)) { 
+    if($rs['name']=='-'){
+        echo "<tr><td></td>";
+    }else{
+        echo "<tr><td>$rs[name]</td>";
+    }
+    $cid=$rs['cid'];
+    echo "<td>$cards[$cid]</td>";
+    echo "<td>$rs[num]</td>";
+    echo "<td>$rs[now_price]</td>";
+    if($rs['name']=='-'){
+        echo "<td></td></tr>";
+    }else{
+        echo "<td>$rs[time]</td></tr>";
+    }
+    $i++;
+}
 ?>
         </table>
-        <div id="d" style="display:none">
-            <img id="pic" align="left" style="position:relative;left:20px;">
-            <span id="infomation" style="position:relative;left:20px;"></span>
-        </div>
     </fieldset>
-    <div class="flipbox hide" id='sell'>
-        <div id="flipcontainer">
-            
-            <span >請輸入數量   </span>
-            <form action="./php/sellmycard.php"  method="post" id="atable">
-            <input id="data"  type="number" name="num" min="1"value=1 required="required" >
-            <span >底價  </span>
-            <input id="money" name="money" type="number" required="required">            
-            <span>截止時間  </span>
-            <input type="datetime-local" name="date" required="required">
-            
-            <input class="hide" name="cid" id="ddd" value=""></input>
-            <input class="hide" name="uid" value="<?php echo  $uid ; ?>"></input>
-            <div><input type="submit"></div>
-            
-            </form>
-            <button onclick=removeflipbox()>取消</button>
-            <h5 id="moneyerr" class="hide ">請確認價格</h5>
-        </div>        
-
-
-    </div>
-
-        <div class="flipbox hide" id='turnmoney'>
-        <div id="flipcontainer">
-            
-            <span >請輸入數量   </span>
-            <form action="./turn.php"  method="post" id="btable">
-            <input id="data2" type="number" name="num2" max=<?php echo $rs['minmum'] ?> min=0 value=0 required="required" >
-            <input class="hide" name="uid" value="<?php echo $uid ; ?>"></input>
-            <div><input type="submit" value="確定"></input></div>
-            
-            </form>
-            <button onclick=removeflipbox()>取消</button>
-            <h5 id="turnmoney" class="hide ">請確認數量</h5>
-        </div>        
-
-
-    </div>
 <script language="javascript">
 <?php 
 echo 'var uid = "'.$_SESSION['uid'].'";';
