@@ -31,6 +31,8 @@ $_SESSION['uid'] = "";
 <style type="text/css">
 @import url('https://fonts.googleapis.com/css?family=Permanent+Marker');
 @import url(http://fonts.googleapis.com/earlyaccess/cwtexyen.css);
+@import url('https://fonts.googleapis.com/css?family=Amatic+SC');
+@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');
 #login{
   position:relative; 
   top:200px;
@@ -50,7 +52,7 @@ body {
     -moz-background-size: cover;
     background-size: cover;
     font-size:20pt;
-    font-family: 'Lucida Console','Permanent Marker', cursive;
+    font-family:'Kaushan Script', cursive;
 }
 #loginbtn{
     position:relative;
