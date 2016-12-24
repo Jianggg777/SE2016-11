@@ -351,7 +351,7 @@ function send() {
         dataType: 'html',
         type: 'POST',
         error: function(response) { //the call back function when ajax call fails
-            alert('Ajax request failed!');
+            //alert('Ajax request failed!');
         },
         success: function(json) { //the call back function when ajax call succeed
             console.log(json);
@@ -364,7 +364,7 @@ function loadInfo() {
         dataType: 'html',
         type: 'POST',
         error: function(response) { //the call back function when ajax call fails
-            alert('Ajax request failed!');
+            //alert('Ajax request failed!');
         },
         success: function(json) { //the call back function when ajax call succeed
             //board
@@ -405,6 +405,7 @@ window.onload = function () {
         <center>
             <h1>管理者頁面</h1>每次登入、每5分鐘自動添加一筆卡片禮包</center>
     </div>
+    <a id="logout" href="./loginForm.php"><img src="./picture/logout.png" style="height:50px;width:50px;"></a>
     <fieldset id="content">
         <legend>競標平台</legend>
         <table border=3 cellpadding="5" id="board">

@@ -31,7 +31,7 @@
                 dataType: 'html',
                 type: 'POST',
                 error: function(response) { //the call back function when ajax call fails
-                    alert('Ajax request failed!');
+                    //alert('Ajax request failed!');
                 },
                 success: function(json) { //the call back function when ajax call succeed
                     jsdata = jQuery.parseJSON(json);//轉成js能用的
@@ -400,9 +400,9 @@ echo $_SESSION['name'];
     <a id="logout" href="./loginForm.php"><img src="./picture/logout.png" style="height:50px;width:50px;"></a>
     <div id="vmenu">
         <ul>
-            <li><a href="myOrders.php" class="style_prevu_kit" >我的交易</a></li>
             <li><a onclick=sentmoney() class="style_prevu_kit">我要換錢</a></li>
-            <li><a href="./history.php" class="style_prevu_kit" >競標紀錄</a></li>
+            <li><a href="myOrders.php" class="style_prevu_kit" >我的交易</a></li>
+            <li><a href="./history.php" class="style_prevu_kit" >交易紀錄</a></li>
         </ul>
     </div>
     <fieldset id="content" style="border-style:ridge;">

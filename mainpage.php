@@ -359,6 +359,7 @@ $("#uinfo").html(i);
 var jsdata;
 var cards= ["","白澤", "饕餮", "檮杌","畢方","精衛","水麒麟","帝江","狴犴"];
 var ownmoney;
+
 //動態顯示交易資訊
 function sentbid(aa,bb,ee) { //oid price
     gg=aa;
@@ -368,13 +369,14 @@ function sentbid(aa,bb,ee) { //oid price
     $('.flipbox').removeClass('hide');
     $('#moneyerr').addClass('hide');
 }
+
 function loadInfo() {
     $.ajax({
         url: './php/loadOrder.php',
         dataType: 'html',
         type: 'POST',
         error: function(response) { //the call back function when ajax call fails
-            alert('Ajax request failed!');
+            //alert('Ajax request failed!');
         },
         success: function(json) { //the call back function when ajax call succeed
             //board
@@ -406,6 +408,7 @@ function loadInfo() {
         }
     });
 }
+
 //檢查交易
 function checkSale(obj){
     //交易完成
@@ -419,28 +422,28 @@ function checkSale(obj){
                 console.log("n",uid);
             },
         success: function(res) { //the call back function when ajax call succeed
-                console.log(res);
-                console.log("y",sessionStorage['uid']);
-            }
-    });
-    //處理交易
-    if(obj.seller==uid||obj.buyer==uid){//是賣方或買方
-            console.log(obj)
-            var info;
-            var info="恭喜您，";
-            if(obj.seller==uid){//賣方
-                info+="賣掉"+obj.cname+"卡"+obj.num+"張，共獲得"+obj.price+"元";
-            }else if(obj.buyer==uid){//買方
-                if(Number(obj.cid)==9){
-　                  var c = res.toString().split("");
-                    info+="得標到卡片禮包(*3)，內含："+cards[c[0]]+" "+cards[c[1]]+" "+cards[c[2]];
-                }else{
-                    info+="得標到"+obj.cname+"卡"+obj.num+"張，總共"+obj.price+"元";
+                console.log("res",res);
+                //處理交易
+                if(obj.seller==uid||obj.buyer==uid){//是賣方或買方
+                    if(obj.price!=0){
+                        var info;
+                        var info="恭喜您，";
+                        if(obj.seller==uid){//賣方
+                            info+="賣掉"+obj.cname+"卡"+obj.num+"張，共獲得"+obj.price+"元";
+                        }else if(obj.buyer==uid){//買方
+                            if(Number(obj.cid)==9){
+            　                  var c = res.toString().split("");
+                                info+="得標到卡片禮包(*3)，內含："+cards[c[0]]+" "+cards[c[1]]+" "+cards[c[2]];
+                            }else{
+                                info+="得標到"+obj.cname+"卡"+obj.num+"張，總共"+obj.price+"元";
+                            }
+                        }
+                        alert(info);
+                        mymoney();
+                    }
                 }
             }
-            alert(info);
-            mymoney();
-    }
+    });
 }
 
 sentdata=()=>{
@@ -467,10 +470,12 @@ sentdata=()=>{
          removeflipbox();
     }
 }
+
 removeflipbox=()=>{
     $('.flipbox').addClass('hide');
 
 }
+
 function mymoney(){
     $.ajax({
         url: "./php/money.php",
@@ -487,6 +492,7 @@ function mymoney(){
             }
     });   
 }
+
 window.onload = function () {
     //每秒檢查
     setInterval(function () {
@@ -517,7 +523,7 @@ window.onload = function () {
         <ul>
             <li><a href="./mycard.php" class="style_prevu_kit">我的卡片</a></li>
             <li><a href="myOrders.php" class="style_prevu_kit">我的交易</a></li>
-            <li><a href="./history.php" class="style_prevu_kit">競標紀錄</a></li>
+            <li><a href="./history.php" class="style_prevu_kit">交易紀錄</a></li>
         </ul>
     </div>
     <fieldset id="content" style="border-style:ridge;">

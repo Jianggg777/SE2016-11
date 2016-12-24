@@ -405,7 +405,7 @@ function loadInfo() {
         type: 'POST',
         data: { "uid": uid }, //optional, you can send field1=10, field2='abc' to URL by this
         error: function(response) { //the call back function when ajax call fails
-            alert('Ajax request failed!');
+            //alert('Ajax request failed!');
         },
         success: function(json) { //the call back function when ajax call succeed
             //board
@@ -444,7 +444,7 @@ function loadInfo2() {
         type: 'POST',
         data: { "uid": uid }, //optional, you can send field1=10, field2='abc' to URL by this
         error: function(response) { //the call back function when ajax call fails
-            alert('Ajax request failed!');
+            //alert('Ajax request failed!');
         },
         success: function(json) { //the call back function when ajax call succeed
             //board
@@ -590,7 +590,7 @@ window.onload = function () {
     <div id="vmenu">
         <ul>
             <li><a href="./mycard.php" class="style_prevu_kit">我的卡片</a></li>
-            <li><a href="./history.php" class="style_prevu_kit" >競標紀錄</a></li>
+            <li><a href="./history.php" class="style_prevu_kit" >交易紀錄</a></li>
         </ul>
     </div>
     <fieldset id="content" style="border-style:ridge;">
